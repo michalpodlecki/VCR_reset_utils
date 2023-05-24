@@ -53,20 +53,20 @@ describe VCRResetUtils::Reset do
     end
   end
 
-  it '#search_files_commend' do
+  it '#search_files_command' do
     VCRResetUtils.configure do |config|
       config.key_words_dictionary = { payment_express: '"payment_express\\|payment express\\|windcave"' }
     end
 
-    expect(described_class.new('payment_express').send(:search_files_commend)).to eq(
-      'git grep -i --files-with-matches "VCR\.use_cassette\|vcr_base_path\|vcr_path\|cassette_name" | xargs grep -i "payment_express\|payment express\|windcave" | grep -v "vcr_utils/reset_spec.rb\|rails_helper.rb" | cut -d : -f 1 | uniq | grep .rb'
+    expect(described_class.new('payment_express').send(:search_files_command)).to eq(
+      'git grep -i --files-with-matches -E "VCR\.use_cassette|vcr_base_path|vcr_path|cassette_name" | xargs grep -i "payment_express\|payment express\|windcave" | grep -v "vcr_utils/reset_spec.rb\|rails_helper.rb" | cut -d : -f 1 | uniq | grep .rb'
     )
   end
 
   it '#call' do
     reset = described_class.new('stripe')
     expect(reset).to receive(:system).with(
-      'git grep -i --files-with-matches "VCR\.use_cassette\|vcr_base_path\|vcr_path\|cassette_name" | xargs grep -i stripe | grep -v "vcr_utils/reset_spec.rb\|rails_helper.rb" | cut -d : -f 1 | uniq | grep .rb | xargs bundle exec rspec'
+      'git grep -i --files-with-matches -E "VCR\.use_cassette|vcr_base_path|vcr_path|cassette_name" | xargs grep -i stripe | grep -v "vcr_utils/reset_spec.rb\|rails_helper.rb" | cut -d : -f 1 | uniq | grep .rb | xargs bundle exec rspec'
     )
     reset.call
   end
@@ -78,7 +78,7 @@ describe VCRResetUtils::Reset do
 
     reset = described_class.new('cybersource')
     expect(reset).to receive(:system).with(
-      'git grep -i --files-with-matches "VCR\.use_cassette\|vcr_base_path\|vcr_path\|cassette_name" | xargs grep -i "cybersource\\|cyber_source\\|cyber source" | grep -v "vcr_utils/reset_spec.rb\|rails_helper.rb" | cut -d : -f 1 | uniq | grep .rb'
+      'git grep -i --files-with-matches -E "VCR\.use_cassette|vcr_base_path|vcr_path|cassette_name" | xargs grep -i "cybersource\\|cyber_source\\|cyber source" | grep -v "vcr_utils/reset_spec.rb\|rails_helper.rb" | cut -d : -f 1 | uniq | grep .rb'
     )
     reset.files_to_rerun
   end

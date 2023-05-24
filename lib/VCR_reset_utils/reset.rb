@@ -16,11 +16,11 @@ module VCRResetUtils
     end
 
     def call
-      system(search_files_commend + ' | xargs bundle exec rspec')
+      system(search_files_command + ' | xargs bundle exec rspec')
     end
 
     def files_to_rerun
-      system(search_files_commend)
+      system(search_files_command)
     end
 
     def allowed_key_word?
@@ -30,8 +30,8 @@ module VCRResetUtils
 
     private
 
-    def search_files_commend
-      'git grep -i --files-with-matches "VCR\.use_cassette\|vcr_base_path\|vcr_path\|cassette_name" | xargs grep -i ' +
+    def search_files_command
+      'git grep -i --files-with-matches -E "VCR\.use_cassette|vcr_base_path|vcr_path|cassette_name" | xargs grep -i ' +
         search_word + ' | grep -v "vcr_utils/reset_spec.rb\|rails_helper.rb" | cut -d : -f 1 | uniq | grep .rb'
     end
 
